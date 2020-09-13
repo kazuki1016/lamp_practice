@@ -1,8 +1,14 @@
 <?php
 
+// var_dumpする関数
 function dd($var){
   var_dump($var);
   exit();
+}
+
+// クロスサイトスクリプト対策として、出力する文字をエスケープ処理
+function h($item){
+  return htmlspecialchars($item, ENT_QUOTES, 'UTF-8');
 }
 
 function redirect_to($url){
@@ -17,6 +23,7 @@ function get_get($name){
   return '';
 }
 
+// POSTされた値を得る関数
 function get_post($name){
   if(isset($_POST[$name]) === true){
     return $_POST[$name];
