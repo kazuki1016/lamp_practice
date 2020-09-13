@@ -14,8 +14,9 @@ $password = get_post('password');
 
 $db = get_db_connect();
 
-
 $user = login_as($db, $name, $password);
+// dd($user);
+
 if( $user === false){
   set_error('ログインに失敗しました。');
   redirect_to(LOGIN_URL);
