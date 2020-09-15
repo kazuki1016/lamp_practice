@@ -62,6 +62,7 @@ function add_cart($db, $user_id, $item_id ) {
   return update_cart_amount($db, $cart['cart_id'], $cart['amount'] + 1);
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function insert_cart($db, $user_id, $item_id, $amount = 1){
   $sql = "
     INSERT INTO
@@ -70,25 +71,33 @@ function insert_cart($db, $user_id, $item_id, $amount = 1){
         user_id,
         amount
       )
-    VALUES({$item_id}, {$user_id}, {$amount})
+    VALUES(?, ?, ?)
   ";
-
-  return execute_query($db, $sql);
+  $statement = $db->prepare($sql);
+  $statement->bindValue(1, $item_id, PDO::PARAM_INT);
+  $statement->bindValue(2, $user_id, PDO::PARAM_INT);
+  $statement->bindValue(3, $amount, PDO::PARAM_INT);
+  return $statement->execute();
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function update_cart_amount($db, $cart_id, $amount){
   $sql = "
     UPDATE
       carts
     SET
-      amount = {$amount}
+      amount = ?
     WHERE
-      cart_id = {$cart_id}
+      cart_id = ?
     LIMIT 1
   ";
-  return execute_query($db, $sql);
+  $statement = $db->prepare($sql);
+  $statement->bindValue(1, $amount, PDO::PARAM_INT);
+  $statement->bindValue(2, $cart_id, PDO::PARAM_INT);
+  return $statement->execute();
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function delete_cart($db, $cart_id){
   $sql = "
     DELETE FROM
@@ -97,8 +106,9 @@ function delete_cart($db, $cart_id){
       cart_id = {$cart_id}
     LIMIT 1
   ";
-
-  return execute_query($db, $sql);
+  $statement = $db->prepare($sql);
+  $statement->bindValue(1, $cart_id, PDO::PARAM_INT);
+  return $statement->execute();
 }
 
 function purchase_carts($db, $carts){
@@ -118,6 +128,7 @@ function purchase_carts($db, $carts){
   delete_user_carts($db, $carts[0]['user_id']);
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function delete_user_carts($db, $user_id){
   $sql = "
     DELETE FROM
@@ -125,8 +136,9 @@ function delete_user_carts($db, $user_id){
     WHERE
       user_id = {$user_id}
   ";
-
-  execute_query($db, $sql);
+  $statement = $db->prepare($sql);
+  $statement->bindValue(1, $user_id, PDO::PARAM_INT);
+  return $statement->execute();
 }
 
 

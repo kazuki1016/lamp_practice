@@ -71,50 +71,77 @@ function regist_item_transaction($db, $name, $price, $stock, $status, $image, $f
   
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function insert_item($db, $name, $price, $stock, $filename, $status){
   $status_value = PERMITTED_ITEM_STATUSES[$status];
-  $sql = "
-    INSERT INTO
-      items(
-        name,
-        price,
-        stock,
-        image,
-        status
-      )
-    VALUES('{$name}', {$price}, {$stock}, '{$filename}', {$status_value});
-  ";
-
-  return execute_query($db, $sql);
+  try{
+    $sql = "
+      INSERT INTO
+        items(
+          name,
+          price,
+          stock,
+          image,
+          status
+        )
+      VALUES(?, ?, ?, ?, ?);
+    ";
+    $statement = $db->prepare($sql);
+    $statement->bindValue(1, $name, PDO::PARAM_STR);
+    $statement->bindValue(2, $price, PDO::PARAM_INT);
+    $statement->bindValue(3, $stock, PDO::PARAM_INT);
+    $statement->bindValue(4, $filename, PDO::PARAM_STR);
+    $statement->bindValue(5, $status_value, PDO::PARAM_STR);
+    return $statement->execute();
+  }catch(PDOException $e){
+    set_error('更新に失敗しました。');
+  }
 }
 
+
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function update_item_status($db, $item_id, $status){
-  $sql = "
-    UPDATE
-      items
-    SET
-      status = {$status}
-    WHERE
-      item_id = {$item_id}
-    LIMIT 1
-  ";
-  
-  return execute_query($db, $sql);
+  try{
+    $sql = "
+      UPDATE
+        items
+      SET
+        status = ?
+      WHERE
+        item_id = ?
+      LIMIT 1
+    ";
+    $statement = $db->prepare($sql);
+    $statement->bindValue(1, $status, PDO::PARAM_INT);
+    $statement->bindValue(2, $item_id, PDO::PARAM_INT);
+    return $statement->execute();
+  }catch(PDOException $e){
+    set_error('更新に失敗しました。');
+  }
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function update_item_stock($db, $item_id, $stock){
-  $sql = "
-    UPDATE
-      items
-    SET
-      stock = {$stock}
-    WHERE
-      item_id = {$item_id}
-    LIMIT 1
-  ";
+  try{
+    $sql = "
+      UPDATE
+        items
+      SET
+        stock = ?
+      WHERE
+        item_id = ?
+      LIMIT 1
+    ";
+    $statement = $db->prepare($sql);
+    $statement->bindValue(1, $stock, PDO::PARAM_INT);
+    $statement->bindValue(2, $item_id, PDO::PARAM_INT);
+    return $statement->execute();
+  // return $statement->execute($params);
+    }catch(PDOException $e){
+      set_error('更新に失敗しました。');
+    }
+  }
   
-  return execute_query($db, $sql);
-}
 
 function destroy_item($db, $item_id){
   $item = get_item($db, $item_id);
