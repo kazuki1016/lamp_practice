@@ -100,13 +100,16 @@ function is_valid_password($password, $password_confirmation){
   return $is_valid;
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function insert_user($db, $name, $password){
   $sql = "
     INSERT INTO
       users(name, password)
-    VALUES ('{$name}', '{$password}');
+    VALUES (?, ?);
   ";
-
-  return execute_query($db, $sql);
+  $statement = $db->prepare($sql);
+  $statement->bindValue(1, $name, PDO::PARAM_INT);
+  $statement->bindValue(2, $password, PDO::PARAM_INT);
+  return $statement->execute();
 }
 
