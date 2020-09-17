@@ -16,10 +16,10 @@ function get_item($db, $item_id){
     FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = ?
   ";
 
-  return fetch_query($db, $sql);
+  return fetch_query($db, $sql, array($item_id));
 }
 
 function get_items($db, $is_open = false){
@@ -36,11 +36,11 @@ function get_items($db, $is_open = false){
   ';
   if($is_open === true){
     $sql .= '
-      WHERE status = 1
+      WHERE status = ?
     ';
   }
 
-  return fetch_all_query($db, $sql);
+  return fetch_all_query($db, $sql, array(1));
 }
 
 function get_all_items($db){
@@ -71,50 +71,51 @@ function regist_item_transaction($db, $name, $price, $stock, $status, $image, $f
   
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function insert_item($db, $name, $price, $stock, $filename, $status){
   $status_value = PERMITTED_ITEM_STATUSES[$status];
-  $sql = "
-    INSERT INTO
-      items(
-        name,
-        price,
-        stock,
-        image,
-        status
-      )
-    VALUES('{$name}', {$price}, {$stock}, '{$filename}', {$status_value});
-  ";
-
-  return execute_query($db, $sql);
+    $sql = "
+      INSERT INTO
+        items(
+          name,
+          price,
+          stock,
+          image,
+          status
+        )
+      VALUES(?, ?, ?, ?, ?);
+    ";
+    return execute_query($db, $sql, array($name, $price, $stock, $filename, $status_value));
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function update_item_status($db, $item_id, $status){
-  $sql = "
-    UPDATE
-      items
-    SET
-      status = {$status}
-    WHERE
-      item_id = {$item_id}
-    LIMIT 1
-  ";
-  
-  return execute_query($db, $sql);
+    $sql = "
+      UPDATE
+        items
+      SET
+        status = ?
+      WHERE
+        item_id = ?
+      LIMIT 1
+    ";
+    return execute_query($db, $sql, array($status, $item_id));
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function update_item_stock($db, $item_id, $stock){
-  $sql = "
-    UPDATE
-      items
-    SET
-      stock = {$stock}
-    WHERE
-      item_id = {$item_id}
-    LIMIT 1
-  ";
+    $sql = "
+      UPDATE
+        items
+      SET
+        stock = ?
+      WHERE
+        item_id = ?
+      LIMIT 1
+    ";
+    return execute_query($db, $sql, array($stock, $item_id));
+  }
   
-  return execute_query($db, $sql);
-}
 
 function destroy_item($db, $item_id){
   $item = get_item($db, $item_id);
@@ -136,11 +137,11 @@ function delete_item($db, $item_id){
     DELETE FROM
       items
     WHERE
-      item_id = {$item_id}
+      item_id = ?
     LIMIT 1
   ";
   
-  return execute_query($db, $sql);
+  return execute_query($db, $sql, array($item_id));
 }
 
 
