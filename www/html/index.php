@@ -13,7 +13,6 @@ if(is_logined() === false){
 $db = get_db_connect();
 $user = get_login_user($db);
 $items = get_open_items($db);
-var_dump($user);
-var_dump($_SESSION[$name]);
+var_dump($items);
 
 include_once VIEW_PATH . 'index_view.php';
