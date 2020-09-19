@@ -22,8 +22,15 @@ $name = get_post('name');
 $price = get_post('price');
 $status = get_post('status');
 $stock = get_post('stock');
-
 $image = get_file('image');
+// POSTされてきたトークン
+$token = get_post('token');
+
+//セッションに保管されているトークンがPOSTされたトークンと一致しているか
+if (is_valid_csrf_token($token) === false || is_valid_csrf_token($token) !== $token  ){
+  set_error('不正アクセスです');
+  redirect_to(LOGIN_URL);
+}
 
 if(regist_item($db, $name, $price, $stock, $status, $image)){
   set_message('商品を登録しました。');

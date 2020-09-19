@@ -13,6 +13,15 @@ $name = get_post('name');
 $password = get_post('password');
 $password_confirmation = get_post('password_confirmation');
 
+// POSTされてきたトークン
+$token = get_post('token');
+
+//セッションに保管されているトークンがPOSTされたトークンと一致しているか
+if (is_valid_csrf_token($token) === false || is_valid_csrf_token($token) !== $token  ){
+  set_message('不正アクセスです');
+  redirect_to(LOGIN_URL);
+}
+
 $db = get_db_connect();
 
 try{
