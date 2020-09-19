@@ -32,4 +32,18 @@ if(purchase_carts($db, $carts) === false){
 
 $total_price = sum_carts($carts);
 
+//購入した商品を商品購入履歴に追加
+$user_id = $user['user_id'];
+if(insert_history($db, $user['user_id'])){
+  $history_id = $db->lastInsertId(); 
+}
+
+$at_price = $carts('price');
+$item_id = $carts('item_id');
+$amount = $carts('amount');
+
+if(regist_history($db, $history_id, $at_price, $user_id, $item_id, $amount) === false){
+  set_error('商品履歴の追加に失敗');
+}
+
 include_once '../view/finish_view.php';

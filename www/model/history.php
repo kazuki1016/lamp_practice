@@ -57,16 +57,17 @@ function get_history_details($db, $user_id){
 // 購入履歴と詳細間でトランザクション
 function regist_history($db, $history_id, $price, $user_id, $item_id, $amount){
   $db->beginTransaction();
-  if(insert_history($db, ＄total_price) && insert_history_details($db, $total_price, $history_id, $price, $user_id, $item_id, $amount)){
+  if(insert_history($db, $user_id) && insert_history_details($db, $history_id, $at_price, $item_id, $amount)){
     $db->commit();
     return true;
+  } else{
+    $db->rollback();
+    return false;
   }
-  $db->rollback();
-  return false;
 }
 
 // 
-function is_open($item){
-  return $item['status'] === 1;
-}
+// function is_open($item){
+//   return $item['status'] === 1;
+// }
 ?>
