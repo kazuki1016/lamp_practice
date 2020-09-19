@@ -62,6 +62,7 @@ function add_cart($db, $user_id, $item_id ) {
   return update_cart_amount($db, $cart['cart_id'], $cart['amount'] + 1);
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function insert_cart($db, $user_id, $item_id, $amount = 1){
   $sql = "
     INSERT INTO
@@ -70,12 +71,13 @@ function insert_cart($db, $user_id, $item_id, $amount = 1){
         user_id,
         amount
       )
-    VALUES(?, ?, ?)
+    VALUES(?, ?, ?);
   ";
 
   return execute_query($db, $sql, array($item_id, $user_id, $amount));
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function update_cart_amount($db, $cart_id, $amount){
   $sql = "
     UPDATE
@@ -89,6 +91,7 @@ function update_cart_amount($db, $cart_id, $amount){
   return execute_query($db, $sql, array($amount, $cart_id));
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function delete_cart($db, $cart_id){
   $sql = "
     DELETE FROM
@@ -118,6 +121,7 @@ function purchase_carts($db, $carts){
   delete_user_carts($db, $carts[0]['user_id']);
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function delete_user_carts($db, $user_id){
   $sql = "
     DELETE FROM

@@ -100,6 +100,7 @@ function is_valid_password($password, $password_confirmation){
   return $is_valid;
 }
 
+// SQLインジェクション対策としてステートメントに値をバインドする形式
 function insert_user($db, $name, $password){
   $sql = "
     INSERT INTO
