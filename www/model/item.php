@@ -138,7 +138,7 @@ function delete_item($db, $item_id){
       items
     WHERE
       item_id = ?
-    LIMIT 1
+    LIMIT 1;
   ";
   
   return execute_query($db, $sql, array($item_id));
