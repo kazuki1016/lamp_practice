@@ -20,6 +20,14 @@ if(is_admin($user) === false){
 
 $item_id = get_post('item_id');
 $changes_to = get_post('changes_to');
+// POSTされてきたトークン
+$token = get_post('token');
+
+//セッションに保管されているトークンがPOSTされたトークンと一致しているか
+if (is_valid_csrf_token($token) === false){
+  set_message('不正アクセスです');
+  redirect_to(LOGIN_URL);
+}
 
 if($changes_to === 'open'){
   update_item_status($db, $item_id, ITEM_STATUS_OPEN);

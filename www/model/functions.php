@@ -16,6 +16,24 @@ function redirect_to($url){
   exit;
 }
 
+// クロスサイトリクエストフォージェリ対策、トークンを生成する関数
+function get_csrf_token(){
+  $TOKEN_LENGTH = 16; //文字列の長さを16に設定
+  $byte = openssl_random_pseudo_bytes($TOKEN_LENGTH); //疑似ランダムなバイト文字列を生成
+  $token = bin2hex($byte); //16進数変更
+  set_session('csrf_token', $token);
+  return $token;
+}
+
+// トークン生成をチェックする関数
+function is_valid_csrf_token($token){
+  if($token === '') {
+    return false;
+  }
+  // get_session()はユーザー定義関数
+  return $token === get_session('csrf_token');
+}
+
 function get_get($name){
   if(isset($_GET[$name]) === true){
     return $_GET[$name];
