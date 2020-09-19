@@ -46,8 +46,8 @@
       
       <input type="submit" value="商品追加" class="btn btn-primary">
        <!-- クロスサイトリクエストフォージェリ対策、生成したトークンを遷移先へ送る -->
-      <input type="hidden" name ="token"  value="<?php h($token);?>">
-ω    </form>
+      <input type="hidden" name ="token"  value="<?php print h($token);?>">
+    </form>
 
 
     <?php if(count($items) > 0){ ?>
@@ -78,7 +78,7 @@
                 <input type="submit" value="変更" class="btn btn-secondary">
                 <input type="hidden" name="item_id" value="<?php print h($item['item_id']); ?>">
                 <!-- クロスサイトリクエストフォージェリ対策、生成したトークンを遷移先へ送る -->
-                <input type="hidden" name ="token"  value="<?php h($token);?>" >
+                <input type="hidden" name ="token"  value="<?php print h($token);?>" >
 
               </form>
             </td>
@@ -94,14 +94,14 @@
                 <?php } ?>
                 <input type="hidden" name="item_id" value="<?php print h($item['item_id']); ?>">
                 <!-- クロスサイトリクエストフォージェリ対策、生成したトークンを遷移先へ送る -->
-                <input type="hidden" name ="token"  value="<?php h($token);?>" >
+                <input type="hidden" name ="token"  value="<?php print h($token);?>" >
               </form>
 
               <form method="post" action="admin_delete_item.php">
                 <input type="submit" value="削除" class="btn btn-danger delete">
                 <input type="hidden" name="item_id" value="<?php print h($item['item_id']); ?>">
                 <!-- クロスサイトリクエストフォージェリ対策、生成したトークンを遷移先へ送る -->
-                <input type="hidden" name ="token"  value="<?php h($token);?>" >
+                <input type="hidden" name ="token"  value="<?php print h($token);?>" >
               </form>
 
             </td>

@@ -23,7 +23,7 @@
       </div>
       <input type="submit" value="ログイン" class="btn btn-primary">
       <!-- クロスサイトリクエストフォージェリ対策、生成したトークンを遷移先へ送る -->
-      <input type="hidden" name ="token"  value="<?php h($token);?>" >
+      <input type="hidden" name ="token"  value="<?php print h($token);?>" >
     </form>
   </div>
 </body>

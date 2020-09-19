@@ -18,7 +18,7 @@ $user = get_login_user($db);
 $token = get_post('token');
 
 //セッションに保管されているトークンがPOSTされたトークンと一致しているか
-if (is_valid_csrf_token($token) === false || is_valid_csrf_token($token) !== $token  ){
+if (is_valid_csrf_token($token) === false ){
    set_error('不正アクセスです');
   redirect_to(LOGIN_URL);
 }
