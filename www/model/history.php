@@ -19,10 +19,11 @@ function insert_history_details($db, $history_id, $at_price, $item_id, $amount){
   $sql = "
     INSERT INTO
       history_details(
-        history_id
-        at_price
-        item_id 
+        history_id,
+        at_price,
+        item_id,
         amount
+      )
     VALUES(?, ?, ?, ?);
   ";
   return execute_query($db, $sql, array($history_id, $at_price, $item_id, $amount));
