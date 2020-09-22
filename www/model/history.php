@@ -30,16 +30,20 @@ function insert_history_details($db, $history_id, $at_price, $item_id, $amount){
 }
 
 // 購入履歴詳細テーブルから読み込む
-function get_history_details($db, $user_id){
+//subtotal = 商品ごとの小計
+function get_historys($db, $user_id){
   $sql = "
     SELECT
       history.history_id,
       history.user_id,
+      history.create_datetime,
       history_details.at_price,
       history_details.amount,
+      history_details.history_details_id,
       items.item_id,
-      items.name
-    FROM
+      items.name,
+      (history_details.at_price * history_details.amount) AS subtotal
+      FROM
       ((history_details 
     JOIN 
       history 
@@ -49,9 +53,44 @@ function get_history_details($db, $user_id){
       items 
     ON 
       history_details.item_id = items.item_id)
-    WHRER 
+    WHERE 
       history.user_id = ?
   ";
   return fetch_all_query($db, $sql, array($user_id));
 }
 
+function get_history_details($db, $history_id){
+  $sql = "
+    SELECT
+      history.history_id,
+      history.user_id,
+      history.create_datetime,
+      history_details.at_price,
+      history_details.amount,
+      history_details.history_details_id,
+      items.item_id,
+      items.name,
+      (history_details.at_price * history_details.amount) AS subtotal
+      FROM
+      ((history_details 
+    JOIN 
+      history 
+    ON 
+      history.history_id = history_details.history_id)
+    JOIN 
+      items 
+    ON 
+      history_details.item_id = items.item_id)
+    WHERE 
+      history.history_id = ?
+  ";
+  return fetch_all_query($db, $sql, array($history_id));
+}
+
+function sum_payment($historys){
+  $total_price = 0;
+  foreach($historys as $history){
+    $total_price += $history['at_price'] * $history['amount'];
+  }
+  return $total_price;
+}
