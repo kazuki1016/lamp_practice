@@ -14,17 +14,8 @@ if(is_logined() === false){
 $db = get_db_connect();
 $user = get_login_user($db);
 
-if(is_admin($user) === false){
-  redirect_to(LOGIN_URL);
-}
-
-
 // トークンの生成
 $token = get_csrf_token();
-
 $historys = get_historys($db,$user['user_id']);
-var_dump($historys);
-$total_price = sum_payment($historys);
-var_dump($total_price);
 
 include_once VIEW_PATH . '/history_view.php';

@@ -20,13 +20,11 @@
           </tr>
         </thead>
         <tbody>
-          <?php foreach($history_details as $history_detail){ ?>
           <tr>
-            <td><?php print h($history_detail['history_id']);?></td>
-            <td><?php print h($history_detail['create_datetime']); ?></td>
-            <td><?php print h(number_format($total_price)); ?>円</td>
+            <td><?php print h($history_id);?></td>
+            <td><?php print h($date); ?></td>
+            <td><?php print h(number_format($total)); ?>円</td>
           </tr>
-          <?php } ?>
     </table>
 
     <table class="table table-bordered text-center">

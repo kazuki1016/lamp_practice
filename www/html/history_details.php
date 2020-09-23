@@ -14,12 +14,10 @@ if(is_logined() === false){
 $db = get_db_connect();
 $user = get_login_user($db);
 
-if(is_admin($user) === false){
-  redirect_to(LOGIN_URL);
-}
-
-//POSTされてきた購入番号
+//POSTされてきた購入情報
 $history_id = get_post('history_id');
+$date = get_post('create_datetime');
+$total = get_post('total');
 // POSTされてきたトークン
 $token = get_post('token');
 
@@ -30,7 +28,6 @@ if (is_valid_csrf_token($token) === false ){
 }
 
 $history_details = get_history_details($db,$history_id);
-var_dump($history_details);
-$total_price = sum_payment($history_details);
+//  var_dump($history_details);
 
 include_once VIEW_PATH . '/history_details_view.php';

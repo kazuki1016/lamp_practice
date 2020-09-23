@@ -24,13 +24,15 @@
           <tr>
             <td><?php print h($history['history_id']);?></td>
             <td><?php print h($history['create_datetime']); ?></td>
-            <td><?php print h(number_format($total_price)); ?>円</td>
+            <td><?php print h(number_format($history['total'])); ?>円</td>
             <td>
               <form method="post" action="history_details.php">
                 <div class="form-group">
                   <input type="submit" name="details" value="詳細" class="btn btn-secondary">
                 </div>
                 <input type="hidden" name="history_id" value="<?php print h($history['history_id']); ?>">
+                <input type="hidden" name="create_datetime" value="<?php print h($history['create_datetime']); ?>">
+                <input type="hidden" name="total" value="<?php print h($history['total']); ?>">
                 <input type="hidden" name ="token"  value="<?php print h($token);?>" >
               </form>
             </td>
