@@ -30,16 +30,48 @@ function insert_history_details($db, $history_id, $at_price, $item_id, $amount){
 }
 
 // 購入履歴詳細テーブルから読み込む
-function get_history_details($db, $user_id){
+//subtotal = 商品ごとの小計
+function get_historys($db, $user_id){
+  if($user_id !== 4){
+    $where = ' WHERE history.user_id = ? ';
+  } else  {
+    $where = '';
+  }
+  $sql = "
+  SELECT 
+    history.history_id,
+    history.create_datetime,
+  SUM( history_details.at_price*history_details.amount) AS total
+
+  FROM
+    history
+  JOIN
+    history_details
+  ON
+	history.history_id = history_details.history_id
+  {$where}
+  GROUP BY
+ 	  history_id
+  ";
+  if($user_id !== 4){ //管理者ユーザーでなければ自身の履歴しかみれない
+    return fetch_all_query($db, $sql, array($user_id));
+  } else {
+    return fetch_all_query($db, $sql, array());
+  }
+}
+
+function get_history_details($db, $history_id){
   $sql = "
     SELECT
       history.history_id,
       history.user_id,
       history_details.at_price,
       history_details.amount,
+      history_details.history_details_id,
       items.item_id,
-      items.name
-    FROM
+      items.name,
+      (history_details.at_price * history_details.amount) AS subtotal
+      FROM
       ((history_details 
     JOIN 
       history 
@@ -49,9 +81,9 @@ function get_history_details($db, $user_id){
       items 
     ON 
       history_details.item_id = items.item_id)
-    WHRER 
-      history.user_id = ?
+    WHERE 
+      history.history_id = ?
   ";
-  return fetch_all_query($db, $sql, array($user_id));
+  return fetch_all_query($db, $sql, array($history_id));
 }
 

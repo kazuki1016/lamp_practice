@@ -17,14 +17,7 @@ $user = get_login_user($db);
 
 $carts = get_user_carts($db, $user['user_id']);
 
-// POSTされてきたトークン
-$token = get_post('token');
 
-//セッションに保管されているトークンがPOSTされたトークンと一致しているか
-if (is_valid_csrf_token($token) === false){
-  set_message('不正アクセスです');
-  redirect_to(LOGIN_URL);
-}
 
 //商品の購入〜履歴追加までトランザクション
 $db->beginTransaction();
@@ -49,8 +42,6 @@ try{
 } catch (PDOException $e) {
   $db->rollback();
   throw $e;
-  var_dump($e);
-
 }
 
 $total_price = sum_carts($carts);
