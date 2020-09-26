@@ -16,7 +16,6 @@ $user = get_login_user($db);
 $token = get_csrf_token();
 // GETされたデータ（並び替え）
 $order_value = get_get('order');
-var_dump($order_value);
 $items = get_open_items($db);
 
 if($order_value === "cheap_order"){
@@ -24,9 +23,5 @@ if($order_value === "cheap_order"){
 } else if($order_value === "expensive_order"){
   $items = expensive_order_items($db);
 }
-
-
-var_dump($items);
-
 
 include_once VIEW_PATH . 'index_view.php';
