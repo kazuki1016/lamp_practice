@@ -37,9 +37,44 @@ function get_items($db, $is_open = false){
   if($is_open === true){
     $sql .= '
       WHERE status = 1
+      ORDER BY item_id DESC
     ';
   }
+  return fetch_all_query($db, $sql);
+}
 
+//並び替えのSQL
+function cheap_order_items($db){
+  $sql = '
+    SELECT
+      item_id, 
+      name,
+      stock,
+      price,
+      image,
+      status
+    FROM
+      items
+    WHERE status = 1
+    ORDER BY price ASC
+  ';
+  return fetch_all_query($db, $sql);
+}
+
+function expensive_order_items($db){
+  $sql = '
+    SELECT
+      item_id, 
+      name,
+      stock,
+      price,
+      image,
+      status
+    FROM
+      items
+    WHERE status = 1
+    ORDER BY price DESC
+  ';
   return fetch_all_query($db, $sql);
 }
 
